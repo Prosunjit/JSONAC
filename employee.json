@@ -1,0 +1,37 @@
+{
+	"personalRecord":{
+		"label":"public",
+		"name":"Alice",
+		"DOB":"1/1/1990",
+		"spouse":"smith",
+		"identification":
+			{
+			"label":"public",
+			"dl":"xxx",
+			"ssn":"xxxx",			
+			"label":"private",
+			"eid":123,
+			"e_id":{
+				"email":"prosun.csedu@gmil.com"	
+				}
+			
+			}
+		
+
+	},
+	"employmentRecord":{
+		"employee_id":"id1",
+		"salary":60000,
+		"past_employment":{ }
+	},
+	"medical_record":{
+		"medical_record_no":"xxx",
+		"healthPlan_no":"xx"
+
+	},
+	"contact_information":{
+
+	}
+
+
+}
