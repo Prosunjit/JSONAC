@@ -8,10 +8,10 @@
 			{
 			"label":"public",
 			"dl":"xxx",
-			"ssn":"xxxx",			
-			"label":"private",
+			"ssn":"xxxx",
 			"eid":123,
 			"e_id":{
+				"label":"private",
 				"email":"prosun.csedu@gmil.com"	
 				}
 			

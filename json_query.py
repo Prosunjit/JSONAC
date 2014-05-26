@@ -43,6 +43,44 @@ class Policy:
 			return False
 		return True
 
+	def keep_label(self,node,label,white_nodes):
+		# node is a dictionary, label is the access label, white_nodes are the nodes that have been cleared for access.
+		#on every run of these function, we traverse child dict, and find which nodes can be shown (in white_nodes). then from the current node, delete all teh object and insert only the white_objects.
+		if type(node) is not  dict:
+			return white_nodes
+		elif type(node) is dict:
+			for key, value in node.iteritems():
+				if type(value) is dict:
+					white_nodes = self.keep_label(value, label, white_nodes)
+
+		
+		if "label" in node and node["label"] == label:
+			#remove objects that are not in whitelist
+			delete_obj=[]
+			for key, value in node.iteritems():
+				if type(value) is dict:
+					#del(node[key])
+					delete_obj.append(key)
+			for item in delete_obj:
+				del(node[item])
+			i=0
+			#print "after deleting ob"
+			#print node
+			#print "white_node"
+			#print white_nodes
+				# needs more work here.
+			if white_nodes:
+				for item in white_nodes:
+					node["new"+str(i)] = item
+					i = i + 1
+				#print "adding white node with node"
+				#print node
+				return [node]
+			else:
+				white_nodes.append(node)
+				return white_nodes
+		else:
+			return white_nodes
 
 
 class Query:
@@ -81,7 +119,9 @@ class Query:
 			self.jobaq = []
 		return self.cur
 
-		
+
+
+
 
 def test():
 	jsonpath = sys.argv[1]
@@ -92,7 +132,9 @@ def test():
 	la = LexicalAnalyzer(jsonpath)
 	token_p = la.token_pair()
 	q = Query(j,token_p)
-	print q.execute()
+	#print q.execute()[0]
+
+	print Policy().keep_label(q.execute()[0],"public",[])
 
 	#print x.get("name")
 	#print lj.data
