@@ -63,6 +63,7 @@ class Policy:
 					delete_obj.append(key)
 			for item in delete_obj:
 				del(node[item])
+			del(node['label'])
 			i=0
 			#print "after deleting ob"
 			#print node
