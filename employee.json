@@ -11,7 +11,7 @@
 			"ssn":"xxxx",
 			"eid":123,
 			"e_id":{
-				"label":"private",
+				"label":"public",
 				"email":"prosun.csedu@gmil.com"	
 				}
 			
@@ -20,9 +20,29 @@
 
 	},
 	"employmentRecord":{
+		"label":"public",
 		"employee_id":"id1",
 		"salary":60000,
-		"past_employment":{ }
+		"past_employment":{
+			"first_emp":{
+				"label":"public",
+				"company":"cention AB",
+				"responsibility":"S.E."
+
+			},
+			"second_emp":{
+				"label":"public",
+				"company":"UTSA",
+				"responsibility":"T.A"
+			},
+			"last_emp":{
+				"label":"private",
+				"company":"UTSA",
+				"responsibility":"R.A"
+
+			}
+			
+		}
 	},
 	"medical_record":{
 		"medical_record_no":"xxx",
