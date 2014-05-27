@@ -1,3 +1,54 @@
+class Policy:
+
+        def __init__(self):
+                pass
+
+        def enforce(self,req_label, cur_label):
+                # assume no label hierarchy. Security policy need to be inforced here.
+                if req_label != cur_label:
+                        return False
+                return True
+	def check_label_policy(self,u_label, n_label):
+		nh = NodeHierarchy()
+		# label hierarcy poset should be fitted in the following line.
+		nh._default_hierarchy_setup()
+		return nh.check(u_label,n_label)
+
+        def keep_label(self,node,label,white_nodes):
+                ''' node is a dictionary, label is the access label, white_nodes are the nodes that have been cleared for access.
+                        on every run of these function, we traverse child dict, and find which nodes can be shown (in white_nodes). 
+                        then from the current node, delete all teh object and insert only the white_objects.
+                '''
+                (k, v) = node.items()[0]
+                for (key, value) in v.items():
+                        if type(value) is dict:
+                                tmp = self.keep_label({key:value}, label, [])
+                                if tmp:
+                                        for el in tmp:
+                                                white_nodes.append(el)
+
+                #if "label" in v and v["label"] == label:
+		if "label" in v and self.check_label_policy(label,v["label"]) :
+                        #remove objects that are not in whitelist
+                        delete_obj=[]
+                        for key, value in v.iteritems():
+                                if type(value) is dict:
+                                        delete_obj.append(key)
+                        for item in delete_obj:
+                                del(v[item])
+                        # delete the label node from output
+                        del(v['label'])
+                        # needs more work here.
+                        if white_nodes:
+                                for wn in white_nodes:
+                                        if wn:
+                                                (_k,_item) =  wn.items()[0]
+                                                v[_k] = _item
+                                return [{k:v}]
+                        else:
+                                return [{k:v}]
+                else:
+                        return white_nodes;
 
 
 class TreeNode:
@@ -13,6 +64,12 @@ class NodeHierarchy:
 	def __init__(self):
 		self.root_list = []
 		self.nodes=[]
+
+	def _default_hierarchy_setup(self):
+
+		self.insert("private","public")
+		self.insert("protected","private")
+
 	def insert(self,x_v,y_v): # insert a hierarchy of two node such that x dominates y. x_v, y_v are values of x & y
 		if self._find_node(x_v) == None:
 			self._add_2_nodes(x_v)
@@ -22,8 +79,6 @@ class NodeHierarchy:
 		x = self._find_node(x_v)
 		y = self._find_node(y_v)
 		x.add_child(y)
-
-		pass
 
 	def check(self,x_v,y_v): # check there x dominates y
 		

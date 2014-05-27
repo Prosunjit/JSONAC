@@ -1,7 +1,7 @@
 import sys
 from  lexical_analyzer import LexicalAnalyzer
 import simplejson as json
-
+from access_control import Policy
 
 jsonpath="/personalRecord/identification[1]/eid"
 
@@ -16,69 +16,6 @@ class LoadJSON:
 	def get_json(self):
 		return self.data
 
-
-
-class Filter:
-	def __init__(self):
-		pass
-	def keep(label, job):
-		#keep object with given label only. all the other objects are deleted.
-		# if job is dict
-
-		if type (job) is dict:
-			#check all descendant ob
-			pass
-		elif type(job) is list:
-			pass
-
-
-class Policy:
-
-	def __init__(self):
-		pass
-
-	def enforce(self,req_label, cur_label):
-		# assume no label hierarchy. Security policy need to be inforced here.
-		if req_label != cur_label:
-			return False
-		return True
-
-	def keep_label(self,node,label,white_nodes):
-		# node is a dictionary, label is the access label, white_nodes are the nodes that have been cleared for access.
-		#on every run of these function, we traverse child dict, and find which nodes can be shown (in white_nodes). then from the current node, delete all teh object and insert only the white_objects.
-		#print node
-		#child_white_nodes=[]
-		(k, v) = node.items()[0]
-		for (key, value) in v.items():
-			if type(value) is dict:
-				tmp = self.keep_label({key:value}, label, [])
-				if tmp:
-					for el in tmp:
-						white_nodes.append(el)
-		
- 		if "label" in v and v["label"] == label:
-			#remove objects that are not in whitelist
-			delete_obj=[]
-			for key, value in v.iteritems():
-				if type(value) is dict:
-					delete_obj.append(key)
-			for item in delete_obj:
-				del(v[item])
-			# delete the label node from output
-			del(v['label'])
-			# needs more work here.
-			if white_nodes:
-				for wn in white_nodes:
-					if wn:
-						(_k,_item) =  wn.items()[0]
-						v[_k] = _item
-				return [{k:v}]
-			else:
-				return [{k:v}]
-		else:
-			return white_nodes;
-
-
 class Query:
 	def __init__(self,json,t):
 		self.json = json
@@ -92,8 +29,6 @@ class Query:
 
 	def execute(self):
 		
-		#print "--"
-		#print self.cur
 		token_pair = self.token_pair
 		cur = self.cur
 		jobaq = self.jobaq
@@ -103,11 +38,6 @@ class Query:
 			#print t1, t2
 			if t1 == "child":
 				for (key, j_ob) in cur.items(): # for j_ob in the current jsobob list in cur...
-					#print j_ob
-					#n_ob = j_ob.get(t2)
-					#print "!!"
-					#print j_ob
-					#print t2
 					n_ob = j_ob[t2]
 					# need to check the policy here.
 					if Policy().enforce("public","public") == True:
@@ -142,7 +72,8 @@ def test():
 	q = Query({"data":j},token_p)
 	print json.dumps( q.execute(), indent=4, sort_keys=True)
 
-	print Policy().keep_label(q.execute(),label,[])
+	filtered_content =  Policy().keep_label(q.execute(),label,[])
+	print json.dumps(filtered_content, indent=4, sort_keys=True)
 
 	#print x.get("name")
 	#print lj.data
