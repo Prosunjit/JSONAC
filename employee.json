@@ -1,12 +1,12 @@
 {
 	"personalRecord":{
-		"label":"public",
+		"label":"private",
 		"name":"Alice",
 		"DOB":"1/1/1990",
 		"spouse":"smith",
 		"identification":
 			{
-			"label":"public",
+			"label":"protected",
 			"dl":"xxx",
 			"ssn":"xxxx",
 			"eid":123,
@@ -20,7 +20,7 @@
 
 	},
 	"employmentRecord":{
-		"label":"public",
+		"label":"private",
 		"employee_id":"id1",
 		"salary":60000,
 		"past_employment":{
@@ -49,9 +49,29 @@
 		"healthPlan_no":"xx"
 
 	},
-	"contact_information":{
+	"contact_information":[
+		{
+			"email":{
+				"gmail":"prosun.csedu@gmail.com",
+				"yahoo":"sonarbangla18@yahoo.com"
+			}
+		},
+		{
+			"phone": "210548883",
+			"chat":{
+				"pc":[ 
+				  {
+				         "gmail":"prosun.csedu@gmail.com",
+				         "yahoo":"sonarbangla18@yahoo.com"
+				  }
+					
+				]
 
-	}
+			}
+		}
+
+	]
+
 
 
 }

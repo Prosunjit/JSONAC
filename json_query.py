@@ -27,6 +27,23 @@ class Query:
 		#print json
 		#print t
 
+	def _gapvalue(self,gap_key, obj):
+		result = []
+		if type(obj) is list:
+			for o in obj:
+				result = result + self._gapvalue(gap_key,o)
+			return result
+		elif type(obj) is dict:
+			#obj is of type instance/object
+			for (k,v) in obj.items():
+				if k == gap_key:
+					result.append(v)
+				else:
+					result = result + self._gapvalue(gap_key,v)
+			return result
+		else:
+			return []
+
 	def execute(self):
 		
 		token_pair = self.token_pair
@@ -44,11 +61,23 @@ class Query:
 						#self.jobaq.append(n_ob)
 						jobaq[t2] = n_ob
 			elif t1 == "index":
-				for (key, j_ob) in cur.item():
+				print "...."
+				print cur
+				for  key in cur:
+					j_ob = cur[key]
 					n_ob = j_ob[int(t2)]
 					if Policy().enforce("public","public") == True:
 						#self.jobaq.append(n_ob)
 						jobaq[t2] = n_ob
+			elif t1 == "gap":
+				gapvalues=[]
+				for (key,j_ob) in cur.items():
+					
+					if key == t2:
+						gapvalues  = gapvalues + [j_ob]
+					else:
+						gapvalues  = gapvalues +  self._gapvalue(t2,j_ob)
+				jobaq[t2] = gapvalues;
 
 						
 			cur = jobaq
