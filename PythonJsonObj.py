@@ -2,6 +2,10 @@ import  utility as utl
 import sys
 
 
+def debug(str):
+	#print str
+	pass
+
 class PyJSOb:
 
 	def __init__(self,tag=None,path=None, type="OBJECT"):
@@ -26,28 +30,107 @@ class PyJSOb:
 	def add_child (self,child):
 		self.children.append(child)
 
-	def add_prim_mem(self,key, value):
-		self.prim_mem.append({key:value})
-
-	def add_obj_mem(self,key = None, obj=None):
+	def add_prim_mem(self,key=None, value=None):
 		if key:
-			obj.set_key(key)
-			self.obj_mem.append( obj )
+			self.prim_mem.append({key:value})
+		else:
+			self.prim_mem.append(value)
+
+	def add_obj_mem(self,key = None, value=None):
+		
+		debug("---")
+		debug(key)
+		debug(value)
+		if key:
+			value.set_key(key)
+		self.obj_mem.append( value )
 		#else:
 		#	self.obj_mem.append(obj)
 
-	def add_array_mem(self,key=None, arr=[]):
+	def add_array_mem(self,key=None, value=[]):
 		self.set_type("ARRAY")
 		if key:
-			self.array_mem.append(arr)
-		#else:
-		#	self.array_mem.append(arr)
+			self.array_mem.append(value)
+		else:
+			self.array_mem.append(value)
 
 	def set_label (self,label):
 		self.label = label
 	
 	def get_prim_mem(self):
 		return self.prim_mem
+
+	def print_array_mem(self):
+		commaFlg = False
+		json = " [ "
+
+		for a in self.array_mem:
+			if commaFlg:
+				json = json + " ,"
+			if a.type == "OBJECT":
+				json = json + self._print_obj(a)
+			elif a.type == "ARRAY":
+				json = json +  self._print_array(a)
+			else:
+				json = json + str(a)
+			commaFlg = True
+
+		json = json + " ] "
+		return json
+
+	
+	def _print_array(self, arr):
+		json = ""
+
+		if arr.key:
+			json =  json + "\"" + arr.key + "\"" + " : "
+
+		if arr.type == "ARRAY":
+			json = json + " [ "
+		commaFlg = False
+
+		# print primitive members first.
+		for a in arr.prim_mem:
+			if commaFlg :
+				json = json + " , "
+			if type(a) is str:
+				json = json + "\"" +  str(a) + "\""
+			elif type(a) is int or type(a) is float:
+				json = json + str(a)
+			else:
+				#print a, type(a)
+				json = json + "\"" + str(a) + "\""
+			commaFlg = True
+
+		'''# print object members
+		for o  in arr.obj_mem:			
+			if commaFlg:
+				json = json + " , "
+			json = json + self._print_obj(o)
+
+			commaFlg = True
+		'''
+		# print array members
+		
+		for a in arr.array_mem:
+			#print a
+			if commaFlg:
+				json = json + " , "
+			if a.type == "ARRAY":
+				json = json + self._print_array(a)
+			elif a.type == "OBJECT":
+				json = json + self._print_obj(a)
+			else:
+				pass
+			commaFlg = True
+		
+
+		if arr.type == "ARRAY":
+			json = json + "]"
+		
+
+		return json
+	
 	def print_obj_mem(self):
 		commaFlg = False
 		json = " { "
@@ -69,6 +152,8 @@ class PyJSOb:
 
 		json = json + " { "
 
+		# get primitive member first.
+
 		for kv in obj.prim_mem:
 			for (k,v) in kv.items():
 				if commaFlg: 
@@ -76,22 +161,44 @@ class PyJSOb:
 				json = json + "\""+str(k) + "\"" + " : " + "\"" + str(v) + "\""
 				commaFlg = True
 
-
+		# get obj member...
 		for o in obj.obj_mem:
 			if commaFlg :
 				json = json + " , "
-			json = json +  self._print_obj(o)
+			if o.type == "OBJECT":
+				json = json +  self._print_obj(o)
+			elif o.type == "ARRAY":
+				json = json + self._print_array(o)
+			else:
+				pass
 			commaFlg = True
 			#json = json + " , " ## some fix
+
+		# get array member
+		'''
+		for a in obj.array_mem:
+			if commaFlg :
+				json = json + " , "
+			json = json + self._print_array(a)
+
+			commaFlg = True
+		'''
 
 		json = json + " } "
 
 		return json
 
-	def pretty_print(self):
+	def print_json (self):
 		if self.type == "OBJECT":
-			utl.pretty_print( self.print_obj_mem())
-				
+			return self._print_obj(self)
+		elif self.type == "ARRAY":
+			return self._print_array(self)
+		else:
+			return {"error":"Neting obj nor Array"}
+
+	def pretty_print(self):
+		return 	utl.pretty_print( self.print_json())
+			
 '''
 	this class represent the whole object tree of the json data
 '''
@@ -110,47 +217,48 @@ class PyObjTree:
 			for (k,v) in jsonObj.items():
 				#print k, v
 				if type(v) is dict:
-					py_obj.add_obj_mem( k, self.buildTree(v) )
+					py_obj.add_obj_mem( key=k, value = self.buildTree(v) )
 
 				elif type(v) is list:
-					py_obj.add_obj_mem(k, self.buildTree(v))
+					py_obj.add_obj_mem(key=k, value = self.buildTree(v))
 
 				elif type(v) is str or type(v) is int or type(v) is float:
 					#print v
-					py_obj.add_prim_mem(k, v)
+					py_obj.add_prim_mem(key=k, value = v)
 				else:					
-					py_obj.add_prim_mem(k, v)
+					py_obj.add_prim_mem(key=k, value = v)
 					#print type(v)
 					pass
 			return py_obj
 		
 		elif type (jsonObj) is list:
 			py_obj = PyJSOb(type="ARRAY")
-			#print py_obj
 			for arr in jsonObj:
 				if type(arr) is list:
-					py_obj.add_array_mem( self.buildTree(arr))
+					py_obj.add_array_mem( value=self.buildTree(arr))
 				elif type(arr) is dict:
-					py_obj.add_array_mem(self.buildTree(arr))
+					py_obj.add_array_mem(value=self.buildTree(arr))
 
 				elif type(arr) is str or type(arr) is int or type(arr) is float:
-					py_obj.add_array_mem(arr)
+					py_obj.add_prim_mem(value = arr)
 				else:
-					py_obj.add_array_mem(arr)
+					py_obj.add_prim_mem(value = arr)
 			return py_obj
 		else:
 			pass
 
 def test():
-	#if len(sys.argv) < 2:
-	#	print "give all arguments"
-	#	exit()
-	job = utl.LoadJSON(path="employee.json").get_json()
+	if len(sys.argv) < 2:
+		print "give all arguments"
+		exit()
+	job = utl.LoadJSON(path=sys.argv[1]).get_json()
 	tree = PyObjTree(job)
 	pyjsob = PyJSOb()
 	to = tree.root
 	to.get_prim_mem()
-	to.pretty_print()
+	print to.print_json()
+
+	print to.pretty_print()
 
 if __name__ == "__main__":
 	test()
