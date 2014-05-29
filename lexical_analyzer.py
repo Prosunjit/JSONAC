@@ -30,4 +30,5 @@ def test():
 	la = LexicalAnalyzer("/a/b//c[0]/def/g[1]")
 	print la.token_pair()
 
-#test()
+if __name__ == "__main__":
+	test()

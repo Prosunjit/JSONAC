@@ -1,20 +1,8 @@
 import sys
+import json
 from  lexical_analyzer import LexicalAnalyzer
-import simplejson as json
 from access_control import Policy
-
-jsonpath="/personalRecord/identification[1]/eid"
-
-class LoadJSON:
-	def __init__(self,path):
-		self.data = json.load(self.read_file(path))
-
-
-	def read_file(self,filename):
-		return  open(filename,'r')
-
-	def get_json(self):
-		return self.data
+import utility as  utility
 
 class Query:
 	def __init__(self,json,t):
@@ -92,7 +80,7 @@ def test():
 	jsonpath = sys.argv[1]
 	label = sys.argv[2] 
 	print "jsonpath:" + jsonpath
-	lj = LoadJSON("employee.json")
+	lj = utility.LoadJSON("employee.json")
 	j =  lj.get_json()
 	#print j
 	#print x["personalRecord"]["name"]

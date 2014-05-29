@@ -1,3 +1,4 @@
+import utility as util
 class Policy:
 
         def __init__(self):
@@ -15,12 +16,15 @@ class Policy:
 		return nh.check(u_label,n_label)
 
         def keep_label(self,node,label,white_nodes):
-                ''' node is a dictionary of {k:ob} form , label is the access label, white_nodes are the nodes that have been cleared for access. on every run of these function, we traverse child dict, and find which nodes can be shown (in white_nodes). 
-                        then from the current node, delete all teh object and insert only the white_objects.
+                ''' node is a dictionary of {k:ob} form , label is the access label, white_nodes are the nodes that have been cleared for access. on every run of these function, we traverse child dict, and find which nodes can be shown (in white_nodes). then from the current node, delete all teh object and insert only the white_objects.
                 '''
+		obj_array = False
                 (k, v) = node.items()[0]
 		
 		#if v is an array / list, convert list into dict. set array=True
+		if type(v) is list:
+			v = util.list2Dict(v)
+			obj_array = True
 
 		# if v is a object(dict)
                 for (key, value) in v.items():
@@ -33,6 +37,10 @@ class Policy:
 				pass
 			else:
 				pass
+
+		if obj_array == True:
+			print white_nodes
+			return util.remove_key_from_dict_array(white_nodes)
 
 		# if arrray == True:
 
@@ -60,6 +68,10 @@ class Policy:
                         return white_nodes;
 
 
+'''
+	Hierarchy node has node of type treenode.
+'''
+
 class TreeNode:
 	def __init__(self,name):
 		self.children = []
@@ -68,10 +80,16 @@ class TreeNode:
 	def add_child(self, tn):
 		self.children.append(tn)
 
+'''
+	access label hierarchy. This is essentially a partial order.
+
+'''
 
 class NodeHierarchy:
 	def __init__(self):
+		# all the root of the partial order set is stored in root_list
 		self.root_list = []
+		# all nodes of the Node Hierarchy
 		self.nodes=[]
 
 	def _default_hierarchy_setup(self):

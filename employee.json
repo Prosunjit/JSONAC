@@ -13,11 +13,8 @@
 			"e_id":{
 				"label":"public",
 				"email":"prosun.csedu@gmil.com"	
-				}
-			
+				}			
 			}
-		
-
 	},
 	"employmentRecord":{
 		"label":"private",
@@ -28,7 +25,6 @@
 				"label":"public",
 				"company":"cention AB",
 				"responsibility":"S.E."
-
 			},
 			"second_emp":{
 				"label":"public",
@@ -39,9 +35,7 @@
 				"label":"private",
 				"company":"UTSA",
 				"responsibility":"R.A"
-
-			}
-			
+			}			
 		}
 	},
 	"medical_record":{
@@ -52,26 +46,23 @@
 	"contact_information":[
 		{
 			"email":{
+				"label":"private",
 				"gmail":"prosun.csedu@gmail.com",
 				"yahoo":"sonarbangla18@yahoo.com"
 			}
 		},
 		{
 			"phone": "210548883",
-			"chat":{
+			"email":{
 				"pc":[ 
 				  {
+					 "label":"private",
 				         "gmail":"prosun.csedu@gmail.com",
 				         "yahoo":"sonarbangla18@yahoo.com"
 				  }
 					
 				]
-
 			}
 		}
-
 	]
-
-
-
 }
