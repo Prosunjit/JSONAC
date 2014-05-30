@@ -42,10 +42,10 @@ class PyJSOb:
 		debug(key)
 		debug(value)
 		if key:
-			value.set_key(key)
-		self.obj_mem.append( value )
-		#else:
-		#	self.obj_mem.append(obj)
+			#value.set_key(key)
+			self.obj_mem.append( {key:value} )
+		else:
+			self.obj_mem.append(obj)
 
 	def add_array_mem(self,key=None, value=[]):
 		self.set_type("ARRAY")
@@ -60,30 +60,12 @@ class PyJSOb:
 	def get_prim_mem(self):
 		return self.prim_mem
 
-	def print_array_mem(self):
-		commaFlg = False
-		json = " [ "
-
-		for a in self.array_mem:
-			if commaFlg:
-				json = json + " ,"
-			if a.type == "OBJECT":
-				json = json + self._print_obj(a)
-			elif a.type == "ARRAY":
-				json = json +  self._print_array(a)
-			else:
-				json = json + str(a)
-			commaFlg = True
-
-		json = json + " ] "
-		return json
-
 	
 	def _print_array(self, arr):
 		json = ""
 
-		if arr.key:
-			json =  json + "\"" + arr.key + "\"" + " : "
+		#if arr.key:
+		#	json =  json + "\"" + arr.key + "\"" + " : "
 
 		if arr.type == "ARRAY":
 			json = json + " [ "
@@ -131,23 +113,12 @@ class PyJSOb:
 
 		return json
 	
-	def print_obj_mem(self):
-		commaFlg = False
-		json = " { "
-		for o in self.obj_mem:
-			if commaFlg:
-				json = json + " , "
-			json = json + self._print_obj(o)
-			commaFlg = True
-		json = json + " } "
-		return json
-	
 
 	def _print_obj(self,obj):
 		json = ""
 		commaFlg=False
-		if  obj.key :
-			json =  "\"" + obj.key + "\"" + " : "
+		#if  obj.key :
+		#	json =  "\"" + obj.key + "\"" + " : "
 			
 
 		json = json + " { "
@@ -163,14 +134,17 @@ class PyJSOb:
 
 		# get obj member...
 		for o in obj.obj_mem:
-			if commaFlg :
-				json = json + " , "
-			if o.type == "OBJECT":
-				json = json +  self._print_obj(o)
-			elif o.type == "ARRAY":
-				json = json + self._print_array(o)
-			else:
-				pass
+			for (k,v) in o.items():
+				if commaFlg :
+					json = json + " , "
+				if v.type == "OBJECT": #!!!!!
+					#json = json +  self._print_obj(o)
+					json = "{} \"{}\":{}".format(json,k,self._print_obj(v))
+				elif v.type == "ARRAY":
+					#json = json + self._print_array(o)
+					json = "{} \"{}\" : {}".format(json,k,self._print_array(v))
+				else:
+					pass
 			commaFlg = True
 			#json = json + " , " ## some fix
 
@@ -206,6 +180,9 @@ class PyObjTree:
 
 	def __init__(self, jsonObj):
 		self.root = self.buildTree(jsonObj)
+		#return self.root
+	def get_root(self):
+		return self.root
 	
 	def buildTree(self,jsonObj):
 

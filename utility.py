@@ -27,6 +27,9 @@ class LoadJSON:
 def pretty_print(str):
 	str =  str.encode("utf-8")
 	str = str.replace(": u", ": ").replace("'", '"')
+	print "--->"
+	print str
+	print "<---"
 	lj = LoadJSON(str = str)
 	return  json.dumps( lj.get_json(),indent=4, sort_keys=True )
 	#print "...."
