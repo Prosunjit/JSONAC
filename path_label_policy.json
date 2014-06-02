@@ -1,35 +1,23 @@
 [
 	{
 		"label":"protected",
-		"when":{
-			"path":"/personalRecord"
-		}
+		"target":"/personalRecord"
 	},
 	{
 		"label":"public",
-		"when":{
-			"path":"//identification"
-		}
-
+		"path":"//identification"
 	},
-
 	{
 		"label":"public",
-		"when":{
-			"path":"/personalRecord/identification/e_id"
-		}
+		"path":"/personalRecord/identification/e_id"
 	},
 	{
 		"label":"protected",
-		"when":{
-			"target": "NODE",
-			"condition":{
-				"path":"NODE/salary",
-				"op": ">",
-				"value": 10000
-			}
-
-		}
+		"target": "NODE",
+		"condition":{
+			"path":"NODE/salary",
+			"op": ">",
+			"value": 10000
+		}		
 	}
-
 ]
