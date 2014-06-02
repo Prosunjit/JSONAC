@@ -1,0 +1,35 @@
+[
+	{
+		"label":"protected",
+		"when":{
+			"path":"/personalRecord"
+		}
+	},
+	{
+		"label":"public",
+		"when":{
+			"path":"//identification"
+		}
+
+	},
+
+	{
+		"label":"public",
+		"when":{
+			"path":"/personalRecord/identification/e_id"
+		}
+	},
+	{
+		"label":"protected",
+		"when":{
+			"target": "NODE",
+			"condition":{
+				"path":"NODE/salary",
+				"op": ">",
+				"value": 10000
+			}
+
+		}
+	}
+
+]
