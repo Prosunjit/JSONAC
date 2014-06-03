@@ -1,12 +1,10 @@
 {
 	"personalRecord":{
-		"label":"private",
 		"name":"Alice",
 		"DOB":"1/1/1990",
 		"spouse":"smith",
 		"identification":
 			{
-			"label":"protected",
 			"dl":"xxx",
 			"ssn":"xxxx",
 			"eid":123,
@@ -17,22 +15,18 @@
 			}
 	},
 	"employmentRecord":{
-		"label":"private",
 		"employee_id":"id1",
 		"salary":60000,
 		"past_employment":{
 			"first_emp":{
-				"label":"public",
 				"company":"cention AB",
 				"responsibility":"S.E."
 			},
 			"second_emp":{
-				"label":"public",
 				"company":"UTSA",
 				"responsibility":"T.A"
 			},
 			"last_emp":{
-				"label":"private",
 				"company":"UTSA",
 				"responsibility":"R.A"
 			}			
@@ -46,7 +40,6 @@
 	"contact_information":[
 		{
 			"email":{
-				"label":"private",
 				"gmail":"prosun.csedu@gmail.com",
 				"yahoo":"sonarbangla18@yahoo.com"
 			}
@@ -56,7 +49,6 @@
 			"email":{
 				"pc":[ 
 				  {
-					 "label":"private",
 				         "gmail":"prosun.csedu@gmail.com",
 				         "yahoo":"sonarbangla18@yahoo.com"
 				  }
