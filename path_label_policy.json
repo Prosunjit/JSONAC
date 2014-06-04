@@ -4,14 +4,22 @@
 [
 	{
 		"label":"protected",
+		"target":"//email"
+	},
+	{
+		"label":"protected",
+		"target":"//past_employment"
+	},
+	{
+		"label":"protected",
 		"target":"/personalRecord"
 	},
 	{
-		"label":"public",
+		"label":"private",
 		"target":"//identification"
 	},
 	{
-		"label":"public",
+		"label":"private",
 		"target":"/personalRecord/identification/e_id"
 	},
 	{

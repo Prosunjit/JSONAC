@@ -86,7 +86,9 @@ class PyJSOb:
 			lv = "\"{}\"".format(self.label_path)
 			json = json + lv + ","
 			lv = "\"{}\"".format(self.path)
-			json = json + lv 
+			json = json + lv + ","
+			lv = "\"{}\"".format(id(arr))
+			json = json + lv
 			commaFlg = True               
 
 
@@ -150,7 +152,9 @@ class PyJSOb:
 			lv = "\"{}\" : \"{}\"".format("label_from",self.label_path)
                         json = json + lv + "," 
 			lv = "\"{}\" : \"{}\"".format("path",self.path)
-			json = json + lv 
+			json = json + lv + ","			
+			lv = "\"{}\" : \"{}\"".format("object_id",id(obj))
+			json = json + lv
                         commaFlg = True 
 
 		for kv in obj.prim_mem:

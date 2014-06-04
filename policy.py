@@ -17,7 +17,6 @@ class NodeLabeling:
 	def appy_labels(self):
 		self._labelling()
 
-		print 'id of objtree here{}'.format(id(self.obj_tree))
 		return self.obj_tree
 
 	# labels object tree for each (path, label)
@@ -32,7 +31,6 @@ class NodeLabeling:
 	def _labels(self):
 		j = utl.LoadJSON(path=self.label_file)
 		js = j.get_json()
-		print js
 		r = []
 		for ob in js:
 			if  ob['target'] != "NODE":
@@ -55,10 +53,11 @@ class NodeLabeling:
 		if job.label == constant.DEFAULT_LABEL:
 			job.set_label(object_label)
 			job.set_label_path(object_path)
-
 		elif utl.json_subpath(object_path, job.label_path):
 			job.set_label(object_label)
 			job.set_label_path(object_path)
+
+			utl.pretty_print (job.print_json())
 			pass
 		else:
 			pass
