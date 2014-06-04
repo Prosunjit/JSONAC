@@ -1,3 +1,6 @@
+
+
+
 [
 	{
 		"label":"protected",
@@ -5,11 +8,11 @@
 	},
 	{
 		"label":"public",
-		"path":"//identification"
+		"target":"//identification"
 	},
 	{
 		"label":"public",
-		"path":"/personalRecord/identification/e_id"
+		"target":"/personalRecord/identification/e_id"
 	},
 	{
 		"label":"protected",

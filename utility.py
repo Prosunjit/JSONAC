@@ -1,3 +1,4 @@
+import sys
 try:
 	import simplejson as json
 except ImportError:
@@ -22,17 +23,19 @@ class LoadJSON:
                 return self.data
 
 
+''' determine if given absolute path, path1 is subpath of path2'''
+def json_subpath(path1,path2):	
+	return path2 in path1
+
+	
+
 
 ''' given a json string... do pretty printing'''
 def pretty_print(str):
 	str =  str.encode("utf-8")
 	str = str.replace(": u", ": ").replace("'", '"')
-	print "--->"
-	print str
-	print "<---"
 	lj = LoadJSON(str = str)
 	return  json.dumps( lj.get_json(),indent=4, sort_keys=True )
-	#print "...."
 
 '''
 	given a list [10,20] return an dict {'0':10, '1':20}
@@ -54,8 +57,9 @@ def remove_key_from_dict_array(dict_array):
 	return r
 
 def test():
-	print list2Dict([10,20])
-	print remove_key_from_dict_array([{'a':10},{'b':"AC"}])
+	#print list2Dict([10,20])
+	#print remove_key_from_dict_array([{'a':10},{'b':"AC"}])
+	print json_subpath(sys.argv[1],sys.argv[2])
 
 if __name__ == '__main__':
 	test()
