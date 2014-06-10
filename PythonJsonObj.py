@@ -3,7 +3,7 @@ import sys
 import constant as constant
 
 DEBUG = True
-
+DEBUG = False
 def debug(str):
 	#print str
 	pass
@@ -29,10 +29,6 @@ class PyJSOb:
 	def set_type(self, type="OBJECT"):
 		self.type = type
 
-	# self.path is the path of this ob in the json-ob tree
-	def set_path(self,path):
-		self.path = path
-
 	def set_key (self,tag):
 		self.key = tag
 
@@ -55,10 +51,11 @@ class PyJSOb:
 
 	def add_array_mem(self,key=None, value=[]):
 		self.set_type("ARRAY")
-		if key:
+		#if key:
+		if value:
 			self.array_mem.append(value)
-		else:
-			self.array_mem.append(value)
+		#else:
+		#	self.array_mem.append(value)
 
 	def set_label (self,label):
 		self.label = label
@@ -81,11 +78,11 @@ class PyJSOb:
 		commaFlg = False
 
 		if DEBUG:
-			lv = "\"{}\"".format(self.label)
+			lv = "\"{}\"".format(arr.label)
 			json = json + lv + ","
-			lv = "\"{}\"".format(self.label_path)
+			lv = "\"{}\"".format(arr.label_path)
 			json = json + lv + ","
-			lv = "\"{}\"".format(self.path)
+			lv = "\"{}\"".format(arr.abs_path)
 			json = json + lv + ","
 			lv = "\"{}\"".format(id(arr))
 			json = json + lv
@@ -114,9 +111,10 @@ class PyJSOb:
 			commaFlg = True
 		'''
 		# print array members
+		#print arr.array_mem
 		
 		for a in arr.array_mem:
-			#print a
+			
 			if commaFlg:
 				json = json + " , "
 			if a.type == "ARRAY":
@@ -147,11 +145,11 @@ class PyJSOb:
 		# get primitive member first.
 
                 if DEBUG:
-			lv = "\"{}\":\"{}\"".format("label",self.label)
+			lv = "\"{}\":\"{}\"".format("label",obj.label)
                         json = json + lv  + "," 
-			lv = "\"{}\" : \"{}\"".format("label_from",self.label_path)
+			lv = "\"{}\" : \"{}\"".format("label_from",obj.label_path)
                         json = json + lv + "," 
-			lv = "\"{}\" : \"{}\"".format("path",self.path)
+			lv = "\"{}\" : \"{}\"".format("path",obj.abs_path)
 			json = json + lv + ","			
 			lv = "\"{}\" : \"{}\"".format("object_id",id(obj))
 			json = json + lv
@@ -223,16 +221,18 @@ class PyObjTree:
 		#jsonObj.set_path(path)
 		if type(jsonObj) is dict:
 			py_obj = PyJSOb(type="OBJECT")			
+			#print "setting path = {}----------------".format(path)
 			py_obj.set_path(path)
 
+			#print "setting path = {} on object id {}----------------".format(py_obj.abs_path,id(py_obj))
 			for (k,v) in jsonObj.items():
 				#print k, v
-				path = "{}/{}".format(path,k)
+				t_path = "{}/{}".format(path,k)
 				if type(v) is dict:
-					py_obj.add_obj_mem( key=k, value = self.buildTree(v,path) )
+					py_obj.add_obj_mem( key=k, value = self.buildTree(v,t_path) )
 
 				elif type(v) is list:
-					py_obj.add_obj_mem(key=k, value = self.buildTree(v,path))
+					py_obj.add_obj_mem(key=k, value = self.buildTree(v,t_path))
 
 				elif type(v) is str or type(v) is int or type(v) is float:
 					#print v
@@ -249,11 +249,11 @@ class PyObjTree:
 
 			index = 0
 			for arr in jsonObj:
-				path = "{}[{}]".format(path,index)
+				t_path = "{}[{}]".format(path,index)
 				if type(arr) is list:
-					py_obj.add_array_mem( value=self.buildTree(arr,path))
+					py_obj.add_array_mem( value=self.buildTree(arr,t_path))
 				elif type(arr) is dict:
-					py_obj.add_array_mem(value=self.buildTree(arr,path))
+					py_obj.add_array_mem(value=self.buildTree(arr,t_path))
 
 				elif type(arr) is str or type(arr) is int or type(arr) is float:
 					py_obj.add_prim_mem(value = arr)

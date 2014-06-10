@@ -11,15 +11,15 @@
 		"target":"//past_employment"
 	},
 	{
-		"label":"protected",
-		"target":"/personalRecord"
+		"label":"public",
+		"target":"/"
 	},
 	{
 		"label":"private",
 		"target":"//identification"
 	},
 	{
-		"label":"private",
+		"label":"protected",
 		"target":"/personalRecord/identification/e_id"
 	},
 	{

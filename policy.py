@@ -42,36 +42,45 @@ class NodeLabeling:
 		res = self.query_ob.query(path)
 
 		for r in res:
+			#print "labeling----------------"
+			#print r
 			if isinstance(r,PyObjTree.PyJSOb):
 				# r.path is eqv to path, because path matched r and r.abs_path is absolute 
-				self._labeling_on_condition(r,label,r.abs_path) 
+				#print "labeling object with id{}---------".format(id(r))
+				#self._labeling_on_condition(r,label,r.abs_path) 
+				self.recursive_labeling(r,label, r.abs_path)
 				pass
 		
 		pass
 
 	def _labeling_on_condition(self, job, object_label, object_path):
+		#print job
 		if job.label == constant.DEFAULT_LABEL:
 			job.set_label(object_label)
 			job.set_label_path(object_path)
 		elif utl.json_subpath(object_path, job.label_path):
 			job.set_label(object_label)
 			job.set_label_path(object_path)
+			#print "############"
 
-			utl.pretty_print (job.print_json())
+			#utl.pretty_print (job.print_json())
 			pass
 		else:
 			pass
 	def recursive_labeling(self,job, label, path):
 		#job.set_label(label)
+
+		#print "labeling object with id {} with label {} with path{}---------".format(id(job),label,path)
 		self._labeling_on_condition(job,label,path)
 		if job.type == "OBJECT":
 			# all members in obj_mem is either ob, or array
 			for ob in job.obj_mem:
-				self.recursive_labeling(ob,label)
+				(k,v) = ob.items()[0]
+				self.recursive_labeling(v,label,path)
 
 		elif job.type == "ARRAY":
 			for ob in job.array_mem:
-				self.recursive_labeling(ob,lable)
+				self.recursive_labeling(ob,label,path)
 
 		else:
 			pass

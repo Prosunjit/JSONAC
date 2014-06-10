@@ -37,6 +37,8 @@ class ObQuery:
 	def query(self,path):
 		
 		if path == "/":
+			#print "returing root obj----------------"
+			#print id( self.tree_root)
 			return [self.tree_root]
 		path_token = LexicalAnalyzer(path).token_pair()
 		ini_nodes = [self.tree_root]
@@ -162,7 +164,11 @@ def test():
 	#apply labels to obj tree
 	obj_tree = Policy.NodeLabeling(obj_tree,label_file="path_label_policy.json").appy_labels()
 
+	#print utl.pretty_print (obj_tree.print_json())
+	#return 
 	#querying against give path
+
+	#print id(obj_tree)
 	path = sys.argv[2]
 
 	nh = NodeHierarchy()
@@ -171,21 +177,30 @@ def test():
 
 
 	oq = ObQuery(obj_tree)
+
+	#qry = ["/","/personalRecord","/","/personalRecord/identification"]
+	qry = [path]
+
+	for q in qry: 
+		#print "path is {}".format(q)
 	
-	if len(sys.argv) >=4 :
-		res = oq.ac_query(path,nh,sys.argv[3])
-	else:
-		res = oq.query(path)
-	# we need to iterate through the res. there can be more than one result.
-	for r in res:
-		if type(r) is dict:
-			(k,v) = r.items()[0]
-			print utl.pretty_print ( v.print_json() )
-			pass
-		elif isinstance(r,PyJSOb):
-			print utl.pretty_print ( r.print_json() )
+		if len(sys.argv) >=4 :
+			res = oq.ac_query(q,nh,sys.argv[3])
 		else:
-			print r
+			res = oq.query(q)
+		# we need to iterate through the res. there can be more than one result.
+		#print (res)
+		for r in res:
+			#print r
+			if type(r) is dict:
+				(k,v) = r.items()[0]
+				print utl.pretty_print ( v.print_json() )
+				pass
+			elif isinstance(r,PyJSOb):
+				#print r.print_json()
+				print utl.pretty_print ( r.print_json() )
+			else:
+				print r
 	
 	#print utl.pretty_print ( obj_tree.print_json() )
 
