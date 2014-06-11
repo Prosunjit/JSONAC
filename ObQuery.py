@@ -80,7 +80,7 @@ class ObQuery:
 			ini_nodes = final_nodes
 		return final_nodes
 
-
+	
 	def _authorized_only(self, job, label_hierarchy, user_clearance):
 		# check descendant nodes for clearance
 		#array_mem = []
@@ -152,6 +152,7 @@ class ObQuery:
 		for ob in q_res:
 			authorized_list.append( self._authorized_only(ob,label_hierarchy, user_clearance))
 			pass
+
 		return authorized_list
 		pass
 
@@ -178,6 +179,8 @@ def test():
 
 	oq = ObQuery(obj_tree)
 
+	#print oq.query_on_condition( {'path':'name', 'op':'=', 'value':'Alice'}, obj_tree)
+	#return 
 	#qry = ["/","/personalRecord","/","/personalRecord/identification"]
 	qry = [path]
 

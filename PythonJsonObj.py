@@ -209,7 +209,7 @@ class PyJSOb:
 class PyObjTree:
 
 	def __init__(self, jsonObj):
-		self.root = self.buildTree(jsonObj,"$")
+		self.root = self.buildTree(jsonObj,"")
 		#return self.root
 	def get_root(self):
 		return self.root

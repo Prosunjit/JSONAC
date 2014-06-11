@@ -24,11 +24,10 @@
 	},
 	{
 		"label":"protected",
-		"target": "NODE",
 		"condition":{
-			"path":"NODE/salary",
+			"path":"company",
 			"op": ">",
-			"value": 10000
+			"value": "UTSA"
 		}		
 	}
 ]
