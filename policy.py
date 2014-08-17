@@ -9,9 +9,10 @@ class Enforcement:
 		pass
 
 class NodeLabeling:
-	def __init__(self,obj_tree , label_file = file):
+	def __init__(self,obj_tree , label_file = None, label_str=None):
 		self.obj_tree = obj_tree
-		self.label_file = label_file		
+		self.label_file = label_file
+		self.label_str = label_str
 		self.query_ob = Query.ObQuery(self.obj_tree)
 
 	def appy_labels(self):
@@ -45,7 +46,10 @@ class NodeLabeling:
 	
 	#read (path, label) from input file, and returns [(path,label),..]
 	def _labels(self):
-		j = utl.LoadJSON(path=self.label_file)
+		if self.label_file:
+			j = utl.LoadJSON(path=self.label_file)
+		elif self.label_str:
+			j = utl.LoadJSON(str=self.label_str)
 		js = j.get_json()
 		r = []
 		c_l = []

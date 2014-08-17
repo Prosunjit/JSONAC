@@ -156,14 +156,80 @@ class ObQuery:
 		return authorized_list
 		pass
 
+class UserHierarchy:
+	def __init__(self):
+		pass
+	def get_hierarchy(self):				
+		nh = NodeHierarchy()
+		nh.insert("private","public")
+		nh.insert("protected","private")
+		return nh
+
+class ContentFilter:
+	def __init__(self, content_file=None, content_str=None, policy_file=None, policy_str=None, query=None, user_clearance=None):
+		self.content_file = content_file
+		self.content_str = content_str
+		self.policy_file = policy_file
+		self.policy_str = policy_str
+		self.JSONPath = query
+		self.user_clearance = user_clearance
+		
+	def apply(self):
+		
+		# ---- Build JSON tree -------#
+		if self.content_file:			 
+			obj_tree = PyObjTree(utl.LoadJSON(path=self.content_file).get_json()).get_root()
+		elif self.content_str:			
+			obj_tree = PyObjTree(utl.LoadJSON(str=self.content_str).get_json()).get_root()
+		# ------- Label JSON tree with Policy -------#
+		if self.policy_file:
+			obj_tree = Policy.NodeLabeling(obj_tree,label_str=utl.File(self.policy_file).read()).appy_labels()
+		elif self.policy_str:			
+			obj_tree = Policy.NodeLabeling(obj_tree,label_str=self.policy_str).appy_labels()
+		# ---- get uer Hierarchy ------#
+		hierarchy = UserHierarchy().get_hierarchy()	
+	
+		# --- Work with Query class for Querying --- #
+		oq = ObQuery(obj_tree)
+		
+		self.JSONPath = self.JSONPath if self.JSONPath else '/'
+		qry = [self.JSONPath]
+
+		for q in qry:
+			if self.user_clearance : # if user_clearance is given, user hiearchy is used.
+				res = oq.ac_query(q,hierarchy,self.user_clearance)
+				print ("with clearance"+self.user_clearance)
+			else: # if user clearance is not given just use the JSONPath to query.
+				res = oq.query(q)
+			# we need to iterate through the res. there can be more than one result.
+			print res
+			for r in res:
+				if type(r) is dict:
+					(k,v) = r.items()[0]
+					return   utl.pretty_print ( v.print_json() )
+					pass
+				elif isinstance(r,PyJSOb):
+					#print r.print_json()
+					return  utl.pretty_print ( r.print_json() )
+				else:
+					return  r
+	
+	#print utl.pretty_print ( obj_tree.print_json() )
+
+def test1():
+	print  ContentFilter(content_file="employee.json", policy_file="path_label_policy.json",query="/personalRecord",user_clearance="protected").apply()
+
 def test():
 	
 	#run with this command :  python ObQuery.py employee.json /personalRecord
 
 	#build the Json Obj tree here
-	obj_tree = PyObjTree(utl.LoadJSON(path=sys.argv[1]).get_json()).get_root()
+	#obj_tree = PyObjTree(utl.LoadJSON(path=sys.argv[1]).get_json()).get_root()
+	obj_tree = PyObjTree(utl.LoadJSON(str=utl.File(sys.argv[1]).read()).get_json()).get_root()
 	#apply labels to obj tree
-	obj_tree = Policy.NodeLabeling(obj_tree,label_file="path_label_policy.json").appy_labels()
+	#obj_tree = Policy.NodeLabeling(obj_tree,label_file="path_label_policy.json").appy_labels()
+
+	obj_tree = Policy.NodeLabeling(obj_tree,label_str=utl.File("path_label_policy.json").read()).appy_labels()
 
 	#print utl.pretty_print (obj_tree.print_json())
 	#return 
@@ -208,4 +274,4 @@ def test():
 	#print utl.pretty_print ( obj_tree.print_json() )
 
 if __name__ == "__main__":
-	test()
+	test1()

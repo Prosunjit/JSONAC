@@ -23,6 +23,15 @@ class LoadJSON:
                 return self.data
 
 
+class File:
+	def __init__(self, name):
+		self.name = name
+	def read(self):
+		with file(self.name,'r') as f:
+			return f.read()
+	
+
+
 ''' determine if given absolute path, path1 is subpath of path2'''
 def json_subpath(path1,path2):	
 	return path2 in path1
@@ -59,7 +68,8 @@ def remove_key_from_dict_array(dict_array):
 def test():
 	#print list2Dict([10,20])
 	#print remove_key_from_dict_array([{'a':10},{'b':"AC"}])
-	print json_subpath(sys.argv[1],sys.argv[2])
+	#print json_subpath(sys.argv[1],sys.argv[2])
+	print File(sys.argv[1]).read()
 
 if __name__ == '__main__':
 	test()
