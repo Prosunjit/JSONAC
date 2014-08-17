@@ -17,7 +17,6 @@ class NodeLabeling:
 
 	def appy_labels(self):
 		self._labelling()
-
 		return self.obj_tree
 
 	# labels object tree for each (path, label)

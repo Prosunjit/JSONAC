@@ -69,7 +69,8 @@ def test():
 	#print list2Dict([10,20])
 	#print remove_key_from_dict_array([{'a':10},{'b':"AC"}])
 	#print json_subpath(sys.argv[1],sys.argv[2])
-	print File(sys.argv[1]).read()
+	#print File(sys.argv[1]).read()
+	print LoadJSON(str='{"a":10, "b":[20]}').get_json()	
 
 if __name__ == '__main__':
 	test()
