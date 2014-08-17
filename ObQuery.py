@@ -173,18 +173,20 @@ class ContentFilter:
 		self.policy_str = policy_str
 		self.JSONPath = query
 		self.user_clearance = user_clearance
+
+		#print "debug------"
+		#print locals()
 		
 	def apply(self):
-		
 		# ---- Build JSON tree -------#
 		if self.content_file:			 
 			obj_tree = PyObjTree(utl.LoadJSON(path=self.content_file).get_json()).get_root()
-		elif self.content_str:			
+		elif self.content_str:
 			obj_tree = PyObjTree(utl.LoadJSON(str=self.content_str).get_json()).get_root()
 		# ------- Label JSON tree with Policy -------#
 		if self.policy_file:
 			obj_tree = Policy.NodeLabeling(obj_tree,label_str=utl.File(self.policy_file).read()).appy_labels()
-		elif self.policy_str:			
+		elif self.policy_str:	
 			obj_tree = Policy.NodeLabeling(obj_tree,label_str=self.policy_str).appy_labels()
 		# ---- get uer Hierarchy ------#
 		hierarchy = UserHierarchy().get_hierarchy()	
@@ -198,11 +200,9 @@ class ContentFilter:
 		for q in qry:
 			if self.user_clearance : # if user_clearance is given, user hiearchy is used.
 				res = oq.ac_query(q,hierarchy,self.user_clearance)
-				print ("with clearance"+self.user_clearance)
 			else: # if user clearance is not given just use the JSONPath to query.
 				res = oq.query(q)
 			# we need to iterate through the res. there can be more than one result.
-			print res
 			for r in res:
 				if type(r) is dict:
 					(k,v) = r.items()[0]
