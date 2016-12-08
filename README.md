@@ -1,6 +1,6 @@
 JSONAC
 ======
-Access control for data represented in JSON format.
+Enforcing access control for data represented in JSON format.
 
 **Summary**:
 
